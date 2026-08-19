@@ -42,7 +42,7 @@ export function ContactForm() {
     setSubmitting(true);
 
     try {
-      await submitContact({ data: result.data });
+      await submitContact(result.data);
       setSubmitted(true);
     } catch (error) {
       setSubmitError(
