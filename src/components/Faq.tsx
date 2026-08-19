@@ -27,8 +27,8 @@ export function Faq() {
               {item.a}
             </p>
           </Accordion.Content>
-          </Accordion.Content>
         </Accordion.Item>
+
 
       ))}
     </Accordion.Root>
