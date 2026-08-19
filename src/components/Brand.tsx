@@ -1,4 +1,4 @@
-import logoLight from "@/assets/korvia-logo-1.jpeg";
+import logoLight from "@/assets/korvia-logo.png";
 
 export function Brand({ inverted = false }: { inverted?: boolean }) {
   return (
