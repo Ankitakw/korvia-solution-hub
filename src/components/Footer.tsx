@@ -39,8 +39,16 @@ const columns = [
 
 export function Footer() {
   return (
-    <footer className="surface-navy">
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:py-20">
+    <footer className="surface-navy relative overflow-hidden">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-40 right-0 h-80 w-80 rounded-full bg-accent/8 blur-[100px]"
+      />
+      <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:py-20">
         <div className="grid gap-10 lg:grid-cols-[1.3fr_repeat(4,minmax(0,1fr))]">
           <div className="max-w-sm">
             <Brand inverted />

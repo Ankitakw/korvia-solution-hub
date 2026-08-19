@@ -8,35 +8,41 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const isLight = scrolled || open;
+
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "border-b border-border bg-background/90 backdrop-blur-md shadow-[0_6px_24px_-18px_oklch(0.212_0.06_258/40%)]"
-          : "bg-background/70 backdrop-blur-sm"
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
+        isLight
+          ? "border-b border-border/80 bg-background/92 backdrop-blur-xl shadow-[0_8px_32px_-12px_oklch(0.195_0.065_262/25%)]"
+          : "border-b border-primary-foreground/8 bg-navy/30 backdrop-blur-md"
       }`}
     >
       <nav
         aria-label="Main navigation"
-        className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:px-6 lg:py-4"
+        className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3.5 sm:px-6 lg:py-4"
       >
         <a href="#home" className="min-w-0">
-          <Brand />
+          <Brand inverted={!isLight} />
         </a>
 
         <div className="flex items-center gap-2">
-          <ul className="hidden items-center gap-1 xl:flex">
+          <ul className="hidden items-center gap-0.5 xl:flex">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
                 <a
                   href={link.href}
-                  className="rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-navy"
+                  className={`rounded-full px-3.5 py-2 text-sm font-medium transition-colors ${
+                    isLight
+                      ? "text-muted-foreground hover:bg-secondary hover:text-navy"
+                      : "text-primary-foreground/75 hover:bg-primary-foreground/10 hover:text-primary-foreground"
+                  }`}
                 >
                   {link.label}
                 </a>
@@ -45,7 +51,7 @@ export function Navbar() {
           </ul>
           <a
             href="#contact"
-            className="hidden rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground shadow-accent-glow transition-transform hover:-translate-y-0.5 sm:inline-flex"
+            className="btn-primary btn-shimmer hidden px-5 py-2.5 text-sm sm:inline-flex"
           >
             Get Free Consultation
           </a>
@@ -54,7 +60,11 @@ export function Navbar() {
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-border text-navy xl:hidden"
+            className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-colors xl:hidden ${
+              isLight
+                ? "border-border text-navy hover:bg-secondary"
+                : "border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10"
+            }`}
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -62,8 +72,8 @@ export function Navbar() {
       </nav>
 
       {open && (
-        <div className="border-t border-border bg-background xl:hidden">
-          <ul className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
+        <div className="border-t border-border bg-background/98 backdrop-blur-xl xl:hidden">
+          <ul className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
                 <a
@@ -75,11 +85,11 @@ export function Navbar() {
                 </a>
               </li>
             ))}
-            <li className="pt-2 pb-3">
+            <li className="pt-3 pb-1">
               <a
                 href="#contact"
                 onClick={() => setOpen(false)}
-                className="block rounded-full bg-accent px-5 py-3 text-center text-base font-semibold text-accent-foreground"
+                className="btn-primary block w-full py-3.5 text-center text-base"
               >
                 Get Free Consultation
               </a>

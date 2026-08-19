@@ -37,6 +37,10 @@ import { MobileCtaBar } from "@/components/MobileCtaBar";
 import { Reveal } from "@/components/Reveal";
 import { ContactForm } from "@/components/ContactForm";
 import { Faq } from "@/components/Faq";
+import { HeroBackground } from "@/components/HeroBackground";
+import { TiltCard } from "@/components/TiltCard";
+import { MarqueeStrip } from "@/components/MarqueeStrip";
+import { FloatingServiceIcons } from "@/components/FloatingServiceIcons";
 import {
   CASE_STUDIES,
   CONTACT,
@@ -137,7 +141,7 @@ function SectionHeading({
 }) {
   return (
     <div className="mx-auto max-w-3xl text-center">
-      {eyebrow && <p className="eyebrow">{eyebrow}</p>}
+      {eyebrow && <p className={inverted ? "eyebrow-inverted" : "eyebrow"}>{eyebrow}</p>}
       <h2
         className={`mt-3 text-3xl leading-[1.1] font-extrabold sm:text-4xl lg:text-5xl ${
           inverted ? "text-primary-foreground" : "text-navy"
@@ -164,93 +168,101 @@ function HomePage() {
       <Navbar />
       <main id="home">
         {/* HERO */}
-        <section className="relative overflow-hidden bg-navy pt-28 pb-20 lg:pt-36 lg:pb-28">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 opacity-[0.16]"
-            style={{
-              backgroundImage:
-                "linear-gradient(oklch(1 0 0 / 40%) 1px, transparent 1px), linear-gradient(90deg, oklch(1 0 0 / 40%) 1px, transparent 1px)",
-              backgroundSize: "64px 64px",
-              maskImage: "radial-gradient(70% 60% at 30% 20%, black, transparent)",
-            }}
-          />
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -top-24 -right-24 h-[26rem] w-[26rem] rounded-full bg-accent/20 blur-3xl"
-          />
-          <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-2">
+        <section className="hero-bg relative overflow-hidden pt-28 pb-0 lg:pt-36">
+          <HeroBackground />
+          <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-4 pb-20 sm:px-6 lg:grid-cols-2 lg:pb-28">
             <div>
-              <p className="eyebrow">Business Problems. Smarter Solutions.</p>
-              <h1 className="mt-4 text-4xl leading-[1.05] font-extrabold text-primary-foreground sm:text-5xl lg:text-6xl">
+              <p className="eyebrow-inverted">Business Problems. Smarter Solutions.</p>
+              <h1 className="mt-5 text-4xl leading-[1.04] font-extrabold text-primary-foreground sm:text-5xl lg:text-[3.4rem] lg:leading-[1.02]">
                 Your Problem.
                 <br />
-                <span className="text-accent">Our Solution.</span>
+                <span className="text-gradient-accent">Our Solution.</span>
               </h1>
-              <p className="mt-5 max-w-xl text-lg font-semibold text-primary-foreground/90 sm:text-xl">
+              <p className="mt-6 max-w-xl text-lg font-semibold text-primary-foreground/92 sm:text-xl">
                 From Small Businesses to Large Enterprises, We Build. We Grow. We Automate. We
                 Scale.
               </p>
-              <p className="mt-5 max-w-xl leading-relaxed text-primary-foreground/70">
+              <p className="mt-4 max-w-xl leading-relaxed text-primary-foreground/65">
                 Tell us what is slowing your business down. We'll understand the problem, recommend
                 the right approach, and build a practical solution that fits your business and
                 budget.
               </p>
-              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-                <a
-                  href="#contact"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-accent px-7 py-4 text-sm font-bold text-accent-foreground shadow-accent-glow transition-transform hover:-translate-y-0.5"
-                >
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+                <a href="#contact" className="btn-primary btn-shimmer">
                   Tell Us Your Problem <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </a>
-                <a
-                  href="#solutions"
-                  className="inline-flex items-center justify-center rounded-full border border-primary-foreground/25 px-7 py-4 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary-foreground/10"
-                >
+                <a href="#solutions" className="btn-outline-light">
                   Explore Our Solutions
                 </a>
               </div>
             </div>
 
-            <div className="relative">
-              <div className="overflow-hidden rounded-3xl border border-primary-foreground/10 shadow-[var(--shadow-lift)]">
-                <img
-                  src={heroImage}
-                  alt="A small business owner, a doctor, a startup founder and an industrial business owner standing together"
-                  width={1200}
-                  height={1104}
-                  className="h-full w-full object-cover"
-                />
-              </div>
+            <div className="relative [perspective:1200px]">
+              <FloatingServiceIcons />
+              <TiltCard className="relative">
+                <div className="card-3d relative overflow-hidden rounded-3xl border border-primary-foreground/15 ring-1 ring-primary-foreground/10">
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 z-10 bg-gradient-to-t from-navy/50 via-transparent to-accent/5"
+                  />
+                  <img
+                    src={heroImage}
+                    alt="A small business owner, a doctor, a startup founder and an industrial business owner standing together"
+                    width={1200}
+                    height={1104}
+                    className="h-full w-full object-cover"
+                  />
+                  {/* 3D depth layer */}
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 z-20 bg-gradient-to-br from-transparent via-transparent to-accent/10"
+                  />
+                </div>
+              </TiltCard>
+
+              {/* Floating accent ring behind image */}
+              <div
+                aria-hidden="true"
+                className="animate-float-slow absolute -top-6 -right-6 -z-10 h-full w-full rounded-3xl border-2 border-accent/20"
+                style={{ transform: "translateZ(-40px)" }}
+              />
+
               <div className="mt-4 grid grid-cols-2 gap-3 lg:absolute lg:-bottom-8 lg:-left-8 lg:mt-0 lg:w-[78%] lg:grid-cols-2">
                 {HERO_CARDS.map((card, i) => (
-                  <Reveal key={card.label} delay={i * 90}>
-                    <div className="flex items-center gap-2.5 rounded-2xl border border-border bg-card px-4 py-3 shadow-[var(--shadow-card)]">
-                      <card.icon className="h-5 w-5 shrink-0 text-accent" aria-hidden="true" />
+                  <div key={card.label}>
+                    <div
+                      className="card-glass card-3d flex animate-float-card items-center gap-2.5 px-4 py-3.5"
+                      style={{ animationDelay: `${i * 0.5}s` }}
+                    >
+                      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-accent to-accent-2 text-accent-foreground shadow-accent-glow">
+                        <card.icon className="h-4 w-4" aria-hidden="true" />
+                      </span>
                       <span className="truncate text-xs font-bold text-navy sm:text-sm">
                         {card.label}
                       </span>
                     </div>
-                  </Reveal>
+                  </div>
                 ))}
               </div>
             </div>
           </div>
 
-          <div className="relative mx-auto mt-16 max-w-7xl px-4 sm:px-6 lg:mt-24">
-            <div className="flex flex-col items-center gap-2 rounded-2xl border border-primary-foreground/12 bg-primary-foreground/[0.04] px-6 py-6 text-center">
+          <div className="relative mx-auto mb-16 max-w-7xl px-4 sm:px-6 lg:mb-24">
+            <div className="card-3d flex flex-col items-center gap-2 rounded-2xl border border-primary-foreground/12 bg-primary-foreground/[0.06] px-6 py-7 text-center backdrop-blur-md">
               <p className="font-display text-xl font-extrabold text-primary-foreground sm:text-2xl">
-                One Partner. <span className="text-accent">All Solutions.</span>
+                One Partner. <span className="text-gradient-accent">All Solutions.</span>
               </p>
-              <p className="text-sm text-primary-foreground/65">
+              <p className="text-sm text-primary-foreground/60">
                 You focus on your business. We handle the technology.
               </p>
             </div>
           </div>
+
+          <MarqueeStrip />
         </section>
 
         {/* PROBLEMS */}
-        <section id="problems" className="bg-surface py-20 lg:py-28">
+        <section id="problems" className="section-mesh bg-surface py-20 lg:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
             <Reveal>
               <SectionHeading
@@ -309,18 +321,27 @@ function HomePage() {
             </Reveal>
 
             <Reveal delay={120}>
-              <ol className="mt-14 flex flex-col gap-3 lg:flex-row lg:items-stretch">
+              <ol className="mt-14 flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-0">
                 {PROCESS_FLOW.map((step, i) => (
-                  <li key={step} className="flex items-center gap-3 lg:flex-1 lg:flex-col">
+                  <li key={step} className="flex items-center gap-3 lg:flex-1">
                     <div
-                      className={`flex w-full items-center justify-center rounded-2xl border px-4 py-4 text-center text-sm font-bold ${
+                      className={`relative flex w-full items-center justify-center rounded-2xl border px-4 py-4 text-center text-sm font-bold ${
                         i === 0
-                          ? "border-transparent bg-accent text-accent-foreground"
+                          ? "border-transparent bg-gradient-to-br from-accent to-accent-2 text-accent-foreground shadow-accent-glow"
                           : "border-border bg-card text-navy shadow-[var(--shadow-card)]"
                       }`}
                     >
+                      <span className="absolute -top-2.5 left-4 hidden rounded-full bg-navy px-2 py-0.5 text-[0.6rem] font-bold tracking-wider text-primary-foreground/70 lg:block">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
                       {step}
                     </div>
+                    {i < PROCESS_FLOW.length - 1 && (
+                      <ArrowRight
+                        aria-hidden="true"
+                        className="mx-1 hidden h-4 w-4 shrink-0 text-accent/70 lg:block"
+                      />
+                    )}
                     {i < PROCESS_FLOW.length - 1 && (
                       <ArrowRight
                         aria-hidden="true"
@@ -335,7 +356,7 @@ function HomePage() {
         </section>
 
         {/* SOLUTIONS BY BUSINESS SIZE */}
-        <section id="solutions" className="bg-surface py-20 lg:py-28">
+        <section id="solutions" className="section-mesh bg-surface py-20 lg:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
             <Reveal>
               <SectionHeading
@@ -348,13 +369,18 @@ function HomePage() {
               {SOLUTION_TIERS.map((tier, i) => (
                 <Reveal key={tier.tier} delay={i * 90} className="h-full">
                   <article
-                    className={`flex h-full flex-col rounded-3xl p-8 transition-transform hover:-translate-y-1.5 ${
+                    className={`relative flex h-full flex-col rounded-3xl p-8 transition-transform hover:-translate-y-1.5 ${
                       tier.featured
-                        ? "surface-navy shadow-[var(--shadow-lift)]"
+                        ? "surface-navy shadow-[var(--shadow-lift)] ring-2 ring-accent/30"
                         : "border border-border bg-card shadow-[var(--shadow-card)]"
                     }`}
                   >
-                    <p className="eyebrow">{tier.tier}</p>
+                    {tier.featured && (
+                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-accent to-accent-2 px-4 py-1 text-[0.65rem] font-bold tracking-wider text-accent-foreground uppercase shadow-accent-glow">
+                        Most Popular
+                      </span>
+                    )}
+                    <p className={tier.featured ? "eyebrow-inverted" : "eyebrow"}>{tier.tier}</p>
                     <h3
                       className={`mt-3 text-2xl font-extrabold ${
                         tier.featured ? "text-primary-foreground" : "text-navy"
@@ -390,10 +416,7 @@ function HomePage() {
               ))}
             </div>
             <div className="mt-10 text-center">
-              <a
-                href="#contact"
-                className="inline-flex items-center gap-2 rounded-full bg-accent px-7 py-4 text-sm font-bold text-accent-foreground shadow-accent-glow transition-transform hover:-translate-y-0.5"
-              >
+              <a href="#contact" className="btn-primary">
                 Find the Right Solution <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </a>
             </div>
@@ -440,7 +463,7 @@ function HomePage() {
         </section>
 
         {/* WHY KORVIA */}
-        <section id="why-korvia" className="bg-navy py-20 lg:py-28">
+        <section id="why-korvia" className="hero-bg py-20 lg:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
             <Reveal>
               <SectionHeading
@@ -455,8 +478,10 @@ function HomePage() {
                 const Icon = ICONS[item.icon] ?? Users;
                 return (
                   <Reveal key={item.title} delay={i * 70} className="h-full">
-                    <article className="h-full rounded-2xl border border-primary-foreground/12 bg-primary-foreground/[0.04] p-6 transition-colors hover:border-accent/50">
-                      <Icon className="h-6 w-6 text-accent" aria-hidden="true" />
+                    <article className="group h-full rounded-2xl border border-primary-foreground/10 bg-primary-foreground/[0.04] p-6 transition-all hover:border-accent/40 hover:bg-primary-foreground/[0.07]">
+                      <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-accent/15 text-accent transition-colors group-hover:bg-accent group-hover:text-accent-foreground">
+                        <Icon className="h-5 w-5" aria-hidden="true" />
+                      </span>
                       <h3 className="font-display mt-4 text-lg font-bold tracking-wide text-primary-foreground uppercase">
                         {item.title}
                       </h3>
@@ -500,7 +525,7 @@ function HomePage() {
         </section>
 
         {/* INDUSTRIES */}
-        <section className="bg-surface py-20 lg:py-28">
+        <section className="section-mesh bg-surface py-20 lg:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
             <Reveal>
               <SectionHeading
@@ -527,10 +552,7 @@ function HomePage() {
                 <h3 className="font-display text-xl font-extrabold text-navy sm:text-2xl">
                   Don't see your industry? Tell us what you need.
                 </h3>
-                <a
-                  href="#contact"
-                  className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3.5 text-sm font-bold text-accent-foreground shadow-accent-glow"
-                >
+                <a href="#contact" className="btn-primary px-6 py-3.5">
                   Start the conversation <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </a>
               </div>
@@ -581,7 +603,7 @@ function HomePage() {
         </section>
 
         {/* ABOUT */}
-        <section id="about" className="bg-surface py-20 lg:py-28">
+        <section id="about" className="section-mesh bg-surface py-20 lg:py-28">
           <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2">
             <Reveal>
               <div>
@@ -636,31 +658,32 @@ function HomePage() {
         </section>
 
         {/* FREE CONSULTATION CTA */}
-        <section className="bg-navy py-20 lg:py-28">
-          <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
+        <section className="hero-bg relative overflow-hidden py-20 lg:py-28">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_100%,oklch(0.72_0.185_52/12%),transparent)]"
+          />
+          <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6">
             <Reveal>
-              <p className="eyebrow">Free Consultation</p>
-              <h2 className="mt-3 text-3xl font-extrabold text-primary-foreground sm:text-4xl">
+              <p className="eyebrow-inverted">Free Consultation</p>
+              <h2 className="mt-4 text-3xl font-extrabold text-primary-foreground sm:text-4xl">
                 Have a Business Problem?
               </h2>
-              <p className="font-display mt-3 text-4xl leading-tight font-extrabold text-accent sm:text-6xl">
-                Let's Find the Solution.
+              <p className="font-display mt-4 text-4xl leading-tight font-extrabold sm:text-6xl">
+                <span className="text-gradient-accent">Let's Find the Solution.</span>
               </p>
-              <p className="mx-auto mt-6 max-w-xl text-primary-foreground/75">
+              <p className="mx-auto mt-6 max-w-xl text-primary-foreground/70">
                 You don't need to know what technology you need. Just tell us what isn't working.
               </p>
-              <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-                <a
-                  href="#contact"
-                  className="inline-flex items-center justify-center rounded-full bg-accent px-8 py-4 text-sm font-bold tracking-wide text-accent-foreground uppercase shadow-accent-glow transition-transform hover:-translate-y-0.5"
-                >
+              <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
+                <a href="#contact" className="btn-primary px-8 uppercase tracking-wide">
                   Book a Free Consultation
                 </a>
                 <a
                   href={CONTACT.whatsappUrl}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="inline-flex items-center justify-center gap-2 rounded-full border border-primary-foreground/25 px-8 py-4 text-sm font-bold tracking-wide text-primary-foreground uppercase transition-colors hover:bg-primary-foreground/10"
+                  className="btn-outline-light gap-2 px-8 uppercase tracking-wide"
                 >
                   <MessageCircle className="h-4 w-4" aria-hidden="true" /> WhatsApp Us
                 </a>
@@ -746,7 +769,7 @@ function HomePage() {
         </section>
 
         {/* FAQ */}
-        <section className="bg-surface py-20 lg:py-28">
+        <section className="section-mesh bg-surface py-20 lg:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
             <Reveal>
               <SectionHeading eyebrow="FAQ" title="Questions Businesses Ask Us" />

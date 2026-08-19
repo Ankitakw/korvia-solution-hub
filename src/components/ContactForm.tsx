@@ -1,42 +1,33 @@
 import { useState } from "react";
-import { CheckCircle2, Send } from "lucide-react";
-import { z } from "zod";
-import { BUDGET_RANGES, BUSINESS_TYPES, CONTACT_METHODS } from "@/data/site";
+import { AlertCircle, CheckCircle2, Loader2, Send } from "lucide-react";
+import { contactFormSchema, type ContactFormData } from "@/lib/contact-form-schema";
+import { submitContact } from "@/lib/submit-contact";
+import { BUDGET_RANGES, BUSINESS_TYPES, CONTACT, CONTACT_METHODS } from "@/data/site";
 
-const schema = z.object({
-  fullName: z.string().trim().min(2, "Please enter your full name").max(100),
-  businessName: z.string().trim().max(120).optional(),
-  phone: z
-    .string()
-    .trim()
-    .min(8, "Please enter a valid phone number")
-    .max(20, "Phone number is too long")
-    .regex(/^[0-9+\-\s()]+$/, "Phone number contains invalid characters"),
-  email: z.union([z.string().trim().email("Enter a valid email").max(255), z.literal("")]),
-  businessType: z.string().max(60).optional(),
-  problem: z
-    .string()
-    .trim()
-    .min(10, "Tell us a little more about the problem")
-    .max(1000, "Please keep it under 1000 characters"),
-  budget: z.string().max(60).optional(),
-  contactMethod: z.string().max(30).optional(),
-});
-
-type Errors = Partial<Record<keyof z.infer<typeof schema>, string>>;
+type Errors = Partial<Record<keyof ContactFormData, string>>;
 
 const fieldClass =
-  "w-full rounded-xl border border-input bg-background px-4 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-accent focus:ring-2 focus:ring-accent/25";
+  "w-full rounded-xl border border-input bg-background px-4 py-3.5 text-sm text-foreground shadow-sm outline-none transition-all placeholder:text-muted-foreground focus:border-accent focus:ring-[3px] focus:ring-accent/20";
 const labelClass = "mb-2 block text-sm font-semibold text-navy";
 
 export function ContactForm() {
   const [errors, setErrors] = useState<Errors>({});
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = Object.fromEntries(new FormData(event.currentTarget).entries());
-    const result = schema.safeParse(data);
+    setSubmitError(null);
+
+    const raw = Object.fromEntries(new FormData(event.currentTarget).entries());
+    if (raw._hp) {
+      setSubmitted(true);
+      return;
+    }
+
+    const result = contactFormSchema.safeParse(raw);
+
     if (!result.success) {
       const next: Errors = {};
       result.error.issues.forEach((issue) => {
@@ -46,14 +37,28 @@ export function ContactForm() {
       setErrors(next);
       return;
     }
+
     setErrors({});
-    setSubmitted(true);
+    setSubmitting(true);
+
+    try {
+      await submitContact({ data: result.data });
+      setSubmitted(true);
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error ? error.message : "Something went wrong. Please try again.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (submitted) {
     return (
       <div className="card-premium flex flex-col items-center gap-4 p-10 text-center">
-        <CheckCircle2 className="h-12 w-12 text-accent" aria-hidden="true" />
+        <span className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-accent/15">
+          <CheckCircle2 className="h-8 w-8 text-accent" aria-hidden="true" />
+        </span>
         <h3 className="font-display text-2xl font-extrabold text-navy">
           Thank you! We'll get back to you shortly.
         </h3>
@@ -65,8 +70,39 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate className="card-premium p-6 sm:p-8">
+    <form onSubmit={onSubmit} noValidate className="card-premium overflow-hidden p-6 sm:p-8">
+      <div className="mb-6 border-b border-border pb-5">
+        <h3 className="font-display text-lg font-extrabold text-navy">Send us a message</h3>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Fill in the details below and we'll respond within 24 hours.
+        </p>
+      </div>
+
+      {submitError && (
+        <div
+          role="alert"
+          className="mb-5 flex items-start gap-3 rounded-xl border border-destructive/25 bg-destructive/5 px-4 py-3 text-sm text-destructive"
+        >
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+          <span>
+            {submitError}{" "}
+            <a href={`mailto:${CONTACT.email}`} className="font-semibold underline">
+              Email us at {CONTACT.email}
+            </a>
+          </span>
+        </div>
+      )}
+
       <div className="grid gap-5 sm:grid-cols-2">
+        <input
+          type="text"
+          name="_hp"
+          tabIndex={-1}
+          autoComplete="off"
+          className="pointer-events-none absolute h-0 w-0 opacity-0"
+          aria-hidden="true"
+        />
+
         <div>
           <label className={labelClass} htmlFor="fullName">
             Full Name *
@@ -153,17 +189,17 @@ export function ContactForm() {
         </div>
         <div className="sm:col-span-2">
           <span className={labelClass}>Preferred Contact Method</span>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2.5">
             {CONTACT_METHODS.map((method) => (
               <label
                 key={method}
-                className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-4 py-2.5 text-sm font-medium text-navy transition-colors hover:border-accent"
+                className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-background px-4 py-2.5 text-sm font-medium text-navy shadow-sm transition-all hover:border-accent hover:bg-accent/5 has-[:checked]:border-accent has-[:checked]:bg-accent/10 has-[:checked]:text-navy"
               >
                 <input
                   type="radio"
                   name="contactMethod"
                   value={method}
-                  className="accent-[oklch(0.687_0.199_44)]"
+                  className="accent-accent"
                 />
                 {method}
               </label>
@@ -174,10 +210,20 @@ export function ContactForm() {
 
       <button
         type="submit"
-        className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-6 py-4 text-sm font-bold text-accent-foreground shadow-accent-glow transition-transform hover:-translate-y-0.5 sm:w-auto"
+        disabled={submitting}
+        className="btn-primary mt-8 w-full disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
       >
-        Get My Free Consultation
-        <Send className="h-4 w-4" aria-hidden="true" />
+        {submitting ? (
+          <>
+            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+            Sending…
+          </>
+        ) : (
+          <>
+            Get My Free Consultation
+            <Send className="h-4 w-4" aria-hidden="true" />
+          </>
+        )}
       </button>
     </form>
   );
