@@ -1,3 +1,12 @@
+export const SITE = {
+  name: "Korvia Partners",
+  tagline: "Your Problem. Our Solution.",
+  url: (import.meta.env["VITE_SITE_URL"] as string | undefined) || "https://korviapartners.vercel.app",
+  ogImagePath: "/og-image.png",
+};
+
+export const SITE_OG_IMAGE = `${SITE.url}${SITE.ogImagePath}`;
+
 export const CONTACT = {
   phone1: "8055292935",
   phone2: "9146695836",
